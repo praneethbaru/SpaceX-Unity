@@ -6,81 +6,141 @@ using UnityEngine.UI;
 
 public  class GameManager : MonoBehaviour {
 
-    bool gameHasEnded = false;
-    public GameObject levelCompleteUI;
-    public Transform player;
-    public Text score1;
-    public float restartDelay = 2f;
-    public static float score;
-    private static float scoreCarry = 0.0f;
-    private int endScene = 3;
+    private bool gameHasEnded = false;
+    private bool isLevelComplete = false;
 
+    private int endScene = 7;
+    private int survivalScene = 6;
+
+    public float restartDelay = 0f;
+    public static float score;
+    public static float countLives = 5;
+    public static float scoreCarry = 0.0f;
+
+    public GameObject levelCompleteUI;
+    public GameObject obstaclePieces;
+
+    public Transform player;
+
+    public Text score1;
+    public Text livesCount;
 
     public void Start()
     {
-        //score = PlayerPrefs.GetFloat("score");
+        try
+        {
+            livesCount.text = countLives.ToString("0");
+        }
+        catch (System.NullReferenceException)
+        {
+            throw;
+        }
+
     }
     void Update()
     {
-        //if not credit scene, keep adding
-        if (SceneManager.GetActiveScene().buildIndex != endScene)
+        //if not end scene, keep adding
+        if (SceneManager.GetActiveScene().buildIndex >= 1 && SceneManager.GetActiveScene().buildIndex <= 5)
         {
-            score = score + Time.deltaTime * 1.5f;
-            score1.text = score.ToString("0");
+            if(!gameHasEnded || !isLevelComplete)
+            {
+                score = score + Time.deltaTime * 1.0f;
+                score1.text = score.ToString("0");
+            }
+
+            else if(gameHasEnded || isLevelComplete)
+            {
+                //score = score;
+                score1.enabled = false;
+                score1.text = " ";
+            }
+        }
+
+        if(SceneManager.GetActiveScene().buildIndex == survivalScene)
+        {
+            if (!gameHasEnded || !isLevelComplete)
+            {
+                score = score + Time.deltaTime * 1.0f;
+                score1.text = score.ToString("0");
+            }
+
+            else if (gameHasEnded || isLevelComplete)
+            {
+                //score = score;
+                score1.enabled = false;
+                score1.text = " ";
+            }
         }
 
         //else don't add
-        else
+        if(SceneManager.GetActiveScene().buildIndex == endScene)
         {
             score1.text = score.ToString("0");
-            //Scene - 6
-         
         }
-        
-        if(SceneManager.GetActiveScene().buildIndex == 1)
+        /*
+        if(SceneManager.GetActiveScene().buildIndex > 1 && SceneManager.GetActiveScene().buildIndex<4)
         {
-           
-            score = score + Time.deltaTime * 1.5f;
-            score1.text = score.ToString("0");
+            if (!gameHasEnded || !isLevelComplete)
+            {
+                score = score + Time.deltaTime * 1.0f;
+                score1.text = score.ToString("0");
+            }
+
+            else if (gameHasEnded || isLevelComplete)
+            {
+                score1.enabled = false;
+                score1.text = " ";
+            }
         }
+        */
 
     }
     public void OnDestroy()
     {
-       // PlayerPrefs.SetFloat("score", score);
     }
 
-    public void levelComplete()
+    public void LevelComplete()
     {
-         scoreCarry = score;
-        Debug.Log("LEVEL REACHED");
+        score = score - 6; //earlier 12
+        scoreCarry = score;
+        isLevelComplete = true;
         levelCompleteUI.SetActive(true);
-        
     }
+
+   
 
     public void GameOver()
     {
         if(gameHasEnded == false)
         {
             gameHasEnded = true;
-
             //Restart the game
+            countLives--;
             Invoke("Restart", restartDelay);
+            livesCount.text = countLives.ToString("0");
         }
     }
 
     public void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        if (SceneManager.GetActiveScene().buildIndex == 1)
+        if (countLives == 0)
         {
-            score = 0;
+            score = score - 6; //earlier 12
+            SceneManager.LoadScene("EndScene");
+            countLives = 5;
         }
-        else
+        else if(countLives>0)
         {
-            score = scoreCarry;
-        }
-    }
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            if (SceneManager.GetActiveScene().buildIndex == 1 || SceneManager.GetActiveScene().buildIndex == 6)
+            {
+                score = 0;
+            }
 
-   
+            if (SceneManager.GetActiveScene().buildIndex >= 1 && SceneManager.GetActiveScene().buildIndex <= 5 )
+            {
+                score = scoreCarry+6;
+            }
+       }
+    }
 }

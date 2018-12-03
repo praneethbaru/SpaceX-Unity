@@ -7,7 +7,8 @@ public class EndTrigger : MonoBehaviour {
 
     void OnTriggerEnter()
     {
-        gameManager.levelComplete();
+        gameManager.LevelComplete();
+        FindObjectOfType<GameManager>().score1.enabled = false;
     }
 }
     

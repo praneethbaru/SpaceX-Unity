@@ -5,8 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class NextLevel : MonoBehaviour {
 
+   // PlayerMovement PlayerMovement;
     public void LoadNextLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+       // PlayerMovement.enabled = true;
+       if(SceneManager.GetActiveScene().buildIndex != 5)
+       {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+       }
+
+        else
+        {
+            SceneManager.LoadScene("EndScene");
+        }
+        
     }
 }

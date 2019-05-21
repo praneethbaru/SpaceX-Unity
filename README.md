@@ -1,7 +1,5 @@
 # SpaceX-Unity
-A 3D game built using Unity Gaming Engine.
-
-SpaceX is a second-person view 3D space themed collison evading game with time dependent  levels of difficulty. The motto of the player is to evade the space obstacles and survive for as long as possible. There are two modes in the game:
+SpaceX is a second-person view 3D space themed collison evading game built with Unity 3D with time dependent  levels of difficulty. The motto of the player is to evade the space obstacles and survive for as long as possible. There are two modes in the game:
 a)Survival mode
 b)Normal modes
 
